@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <script>
+       var ballX, ballY;
+       var my;
+       var ai;
+       var delta, alfa;
+       var dx, dy;
+       var running;
+       var first, second;
+       first = second = 0;
+        window.setInterval(count, 10);
+       
+       function updateGet() {
+         ballX = parseInt(document.getElementById("ball").style.left);
+         ballY = parseInt(document.getElementById("ball").style.top);
+         my = parseInt(document.getElementById("my").style.top);
+         ai = parseInt(document.getElementById("ai").style.top);
+       }
+       function updateSet() {
+         document.getElementById("ball").style.left = ballX + "px";
+         document.getElementById("ball").style.top = ballY + "px";
+         document.getElementById("my").style.top = my + "px";
+         document.getElementById("ai").style.top = ai + "px";
+       }
+       function debug() {
+         updateGet();
+         alert(my);
+         updateSet();
+       }
+       function add(t) {
+        if (t === 1) {
+          first++;
+          alert("FIRST PLAYER WON THIS ROUND!!!");
+          document.getElementById("first").innerHTML = first;
+          init();
+        }else {
+          second++;
+          alert("SECOND PLAYER WON THIS ROUND!!!");
+          document.getElementById("second").innerHTML = second;
+          init();
+        }
+       }
+       function count(){
+           if (!running) return;
+           updateGet(); 
+           my += alfa;
+           if (my < 20) my = 20, alfa = 0;
+           if (my > 420) my = 420, alfa = 0;
+           ai += delta;
+           if (ai < 20) ai = 20, delta = 0;
+           if (ai > 420) ai = 420, delta = 0;
+           ballX += dx;
+           ballY += dy;
+           if (ballY < 10)  dy *= -1;
+           if (ballY > 570)  dy *= -1;
+           if (ballX < 0 && my <= ballY && my+150 >= ballY) dx *= -1;
+           if (ballX > 955 && ai <= ballY && ai+150 >= ballY) dx *= -1;
+           if (ballX < -20) add(2);
+           if (ballX > 980) add(1); 
+           updateSet();
+       }
+       window.addEventListener('click', function(event) {
+        if (running) return;
+        running = true;
+       }, false);
+       window.addEventListener('keydown', function(event){
+         if (!running) {
+          running = 1;
+         }
+         if (event.keyCode === 38) delta = -5;
+         if (event.keyCode === 40) delta = 5;
+         if (event.keyCode === 87) alfa = -5;
+         if (event.keyCode === 83) alfa = 5;
+       },false);
+       window.addEventListener('keyup', function(event) {
+         if ((event.keyCode === 38 && delta === -5) || (event.keyCode === 40 && delta === 5)) delta = 0;
+         if ((event.keyCode === 83 && alfa === -5) || (event.keyCode === 87 && alfa === 5)) alfa = 0;
+      },false);
+      function init(){
+        dx = dy = 7;
+        ballX = 435;
+        ballY = 300;
+        my = ai = 225;
+        alft = delta = 0;
+        running = 0;
+        updateSet();
+      }
+    </script>
+    <link rel="stylesheet" type="text/css" href="game_style.css" />
+   </head>
+   <body onload="init()">
+     <p id="first">0</p>
+     <p id="second">0</p>
+    
+     <div id="main">
+      <div class="desk" id="my">
+      </div>
+      <div class="ball" id="ball"></div>
+      <div class="desk" id="ai">
+      </div>
+    </div>
+   </body>
+ 
+
+</html>
